@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap 4 Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+  <h1>REPOSITORIS DE GITHUB</h1>
+  <p>Autora: Jana Corsellas</p>
+</div>
+
+<div class="container">
+	<div class="row">
+		<div class="col-sm-2">
+			<h2>Perfil</h2>
+			<div class="input-group mb-3">
+				<label for= "usr"></label>
+				<input type="text" class="form-control" placeholder="Nom d'usuari" id="usr" name="Nom d'usuari" required>
+			</div>
+			<div class="input-group-append">
+				<button id="Entrabutton" class="btn btn-primary">Buscar</button>
+			</div>
+		</div>
+		<div class="jumbotron text-center">
+			<h3>Informació de repositoris:</h3>
+			<table class="table table-hover">
+				<thread>
+				<tr>
+					<th>Nom Repositori</th>
+					<th>Descripció</th>
+					<th>Seguidors</th>
+				</tr>
+				</thread>
+				<tbody id= "taularepositori">
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<script>
+	$(document).ready(function () {
+		$("#Entrabutton").click(function (){
+			const usuari = document.getElementById("usr").value;
+			if (usuari !== ""){
+				$("#user").text(usuari);
+				$.ajax({
+					url: "https://api.github.com/users/" +  usuari + "/repos",
+					method: "GET",
+					dataType: "json",
+					success: function (data){
+						const taularepo = $("#taularepositori");
+						taularepo.empty();
+						
+						data.forEach(function(repo){
+							const row = $("<tr>");
+							row.append($("<td>").text(repo.name));
+							row.append($("<td>").text(repo.description || "Sense descripció"));
+							row.append($("<td>").text(repo.followers || "Sense seguidors"));
+							taularepo.append(row);
+						});
+					},
+					error: function (){
+						alert("Usuari incorrecte");
+					}
+				});
+			}
+			else {
+				alert("Usuari incorrecte");
+			}
+			
+		});
+	});
+</script>
+</body>
+</html>
